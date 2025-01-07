@@ -1,0 +1,300 @@
+#qr-container {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  width: 304px;
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  opacity: 0;
+  visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateY(20px) scale(0.8);
+  transform-origin: bottom left;
+  box-sizing: border-box;
+}
+
+#qr-code {
+  width: 256px;
+  height: 256px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+#qr-code img {
+  width: 256px;
+  height: 256px;
+  display: block;
+  flex-shrink: 0;
+}
+
+#title-container {
+  width: 100%;
+  margin-top: 24px;
+  padding: 0;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+#site-name {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 8px;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#page-title {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+  max-height: 2.8em;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* 错误信息样式 */
+#qr-code div {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* 修改浮动 logo 样式，增加悬停区域 */
+#floating-logo {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: transparent;
+  box-shadow: none;
+  z-index: 10000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+  transform-origin: center;
+  pointer-events: auto;
+  /* 添加内边距增加可点击区域 */
+  padding: 8px;
+  /* 添加负外边距抵消内边距带来的位移 */
+  margin: -8px;
+  /* 添加一个较大的触发区域 */
+  cursor: pointer;
+}
+
+/* 修改 logo 图片样式以适应新的布局 */
+#floating-logo img {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  /* 确保图片大小不变 */
+  flex-shrink: 0;
+}
+
+/* 添加一个额外的悬停触发区域 */
+#floating-logo::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  right: -8px;
+  bottom: -8px;
+  border-radius: 20px;
+  /* 确保触发区域不影响视觉效果 */
+  pointer-events: auto;
+  z-index: -1;
+}
+
+/* 展开状态时的 logo 样式 */
+#floating-logo.expanded {
+  transform: scale(0.8);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#qr-container.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 添加动画效果 */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 添加复制提示的样式 */
+#copy-tooltip {
+  position: fixed;
+  bottom: 84px;
+  left: 24px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10001;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+#copy-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+
+/* 添加动画优化 */
+* {
+  box-sizing: border-box;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* 修改安全区域容器样式 */
+#qr-safe-area {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  width: 304px; /* 与二维码容器相同宽度 */
+  height: 480px; /* 足够高度覆盖二维码和 logo */
+  pointer-events: none;
+  z-index: 9998; /* 低于二维码和 logo */
+  display: block; /* 改回显示 */
+}
+
+#qr-safe-area.active {
+  pointer-events: auto;
+}
+
+/* 主题支持 */
+.theme-dark {
+  --bg-color: #1a1a1a;
+  --text-color: #ffffff;
+  --shadow-color: rgba(255, 255, 255, 0.1);
+}
+
+.theme-light {
+  --bg-color: #ffffff;
+  --text-color: #000000;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 位置支持 */
+#qr-safe-area.position-right {
+  left: auto;
+  right: 24px;
+}
+
+/* 预览工具提示 */
+#preview-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  background: var(--bg-color);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  margin-bottom: 8px;
+  max-width: 300px;
+  z-index: 10002;
+}
+
+.preview-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.preview-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+}
+
+.preview-icon.secure {
+  background: url('data:image/svg+xml,...') no-repeat center;
+}
+
+.preview-icon.insecure {
+  background: url('data:image/svg+xml,...') no-repeat center;
+}
+
+/* 添加控制按钮容器样式 */
+#controls-container {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+  gap: 8px;
+}
+
+.control-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.control-btn:hover {
+  background-color: #e0e0e0;
+}
+
+#toggle-logo-btn {
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMTZDMTQuMjA5MSAxNiAxNiAxNC4yMDkxIDE2IDEyQzE2IDkuNzkwODYgMTQuMjA5MSA4IDEyIDhDOS43OTA4NiA4IDggOS43OTA4NiA4IDEyQzggMTQuMjA5MSA5Ljc5MDg2IDE2IDEyIDE2WiIgZmlsbD0iIzY2NiIvPjwvc3ZnPg==');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 20px;
+  opacity: 0.6;
+}
+
+#toggle-logo-btn:hover {
+  opacity: 1;
+  background-color: #f0f0f0;
+}
+
+#toggle-logo-btn.active {
+  opacity: 1;
+  background-color: #e0e0e0;
+  background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTIgMTZDMTQuMjA5MSAxNiAxNiAxNC4yMDkxIDE2IDEyQzE2IDkuNzkwODYgMTQuMjA5MSA4IDEyIDhDOS43OTA4NiA4IDggOS43OTA4NiA4IDEyQzggMTQuMjA5MSA5Ljc5MDg2IDE2IDEyIDE2WiIgZmlsbD0iIzAwMCIvPjwvc3ZnPg==');
+} 
